@@ -1,5 +1,4 @@
 package com.kabgig.rest.websevices.restfulwebservices.exception;
-
 import java.time.LocalDateTime;
 
 public class ErrorDetails {

@@ -29,6 +29,11 @@ public class UserResource {
         return user;
     }
 
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable int id){
+        service.deleteById(id);
+    }
+
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody User user){
         User savedUser = service.save(user);
@@ -38,10 +43,6 @@ public class UserResource {
                 .path("/{id}") // appending /{id} to /users
                 .buildAndExpand(savedUser.getId()) // replacing {id} with real id
                 .toUri(); //converting to Uri
-
         return ResponseEntity.created(location).build();
     }
-
-
-
 }
