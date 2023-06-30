@@ -1,20 +1,66 @@
+Code Changes for Next Step - https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/12-rest-api/01-step-by-step-changes/v2.md#step-21
 
-@ControllerAdvice
-public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
 
-	@ExceptionHandler(Exception.class)
-	public final ResponseEntity<ErrorDetails> handleAllExceptions(Exception ex, WebRequest request) throws Exception {
-		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(),
-				ex.getMessage(), request.getDescription(false));
 
-		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+URLs
+URI Versioning
 
-	@ExceptionHandler(UserNotFoundException.class)
-	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(Exception ex, WebRequest request) throws Exception {
-		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(),
-				ex.getMessage(), request.getDescription(false));
+V1: http://localhost:8080/v1/person
 
-		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
-	}
+@GetMapping("/v1/person")
+
+V2: http://localhost:8080/v2/person
+
+@GetMapping("/v2/person")
+
+Request Param Versioning
+
+V1: http://localhost:8080/person?version=1
+
+@GetMapping(path = "/person", params = "version=1")
+
+V2: http://localhost:8080/person?version=2
+
+@GetMapping(path = "/person", params = "version=2")
+
+Header Versioning
+
+V1: http://localhost:8080/person/header
+
+HEADER - X-API-VERSION:1
+
+@GetMapping(path = "/person/header", headers = "X-API-VERSION=1")
+
+V2: http://localhost:8080/person/header
+
+HEADER - X-API-VERSION:2
+
+@GetMapping(path = "/person/header", headers = "X-API-VERSION=2")
+
+Content Negotiation Versioning
+
+V1: http://localhost:8080/person/accept
+
+HEADER - Accept:application/vnd.company.app-v1+json
+
+@GetMapping(path = "/person/accept", produces = "application/vnd.company.app-v1+json")
+
+V2: http://localhost:8080/person/accept
+
+HEADER - Accept:application/vnd.company.app-v1+json
+
+@GetMapping(path = "/person/accept", produces = "application/vnd.company.app-v2+json")
+
+V1 Response
+
+{
+  "name": "Bob Charlie"
+}
+V2 Response
+
+{
+  "name": {
+    "firstName": "Bob",
+    "lastName": "Charlie"
+  }
 }
