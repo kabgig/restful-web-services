@@ -16,20 +16,21 @@ public class FilteringController {
     @GetMapping("/filtering")
     public MappingJacksonValue filtering(){
         SomeBean someBean = new SomeBean("vale1","value2","value3");
-        MappingJacksonValue mappingJacksonValue =
-                getMappingJacksonValue(
-                        someBean,
-                        "field1",
-                        "field3",
-                        "SomeBeanFilter");
-        return mappingJacksonValue;
+        return getMappingJacksonValue(someBean, "field1", "field3", "SomeBeanFilter");
     }
 
-    private static MappingJacksonValue getMappingJacksonValue(Object beanObject, String property1, String property2, String filterName) {
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(beanObject);
-        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept(property1, property2);
-        FilterProvider filters = new SimpleFilterProvider().addFilter(filterName, filter);
-        mappingJacksonValue.setFilters(filters);
+    private static MappingJacksonValue getMappingJacksonValue(
+            Object beanObject,
+            String property1,
+            String property2,
+            String filterName) {
+        MappingJacksonValue mappingJacksonValue =
+                new MappingJacksonValue(beanObject); //wrapping
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter
+                                                    .filterOutAllExcept(property1, property2); // creating filter
+        FilterProvider filters = new SimpleFilterProvider()
+                                        .addFilter(filterName, filter); // adding filter
+        mappingJacksonValue.setFilters(filters); // executing filter
         return mappingJacksonValue;
     }
 
@@ -38,13 +39,8 @@ public class FilteringController {
         List<SomeBean> beanList = Arrays.asList(
                 new SomeBean("value1","value2","value3"),
                 new SomeBean("value4","value5","value6"));
-        MappingJacksonValue mappingJacksonValue =
-                getMappingJacksonValue(
-                        beanList,
-                        "field2",
-                        "field3",
-                        "SomeBeanFilter");
-        return mappingJacksonValue;
+        return getMappingJacksonValue(beanList, "field2", "field3", "SomeBeanFilter");
+
     }
 
 }
