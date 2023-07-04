@@ -1,66 +1,34 @@
-Code Changes for Next Step - https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/12-rest-api/01-step-by-step-changes/v2.md#step-21
+Resources For Next Step
+Code Changes for Next Step - https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/12-rest-api/01-step-by-step-changes/v2.md#step-35
 
 
 
-URLs
-URI Versioning
+Launch MySQL as Docker Container
+docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=social-media-user --env MYSQL_PASSWORD=dummypassword --env MYSQL_DATABASE=social-media-database --name mysql --publish 3306:3306 mysql:8-oracle
 
-V1: http://localhost:8080/v1/person
 
-@GetMapping("/v1/person")
+mysqlsh commands
+mysqlsh
+\connect social-media-user@localhost:3306
+\sql
+use social-media-database
+select * from user_details;
+select * from post;
+\quit
 
-V2: http://localhost:8080/v2/person
 
-@GetMapping("/v2/person")
+/pom.xml Modified
+<dependency>
+	<groupId>mysql</groupId>
+	<artifactId>mysql-connector-java</artifactId>
+</dependency> 
 
-Request Param Versioning
 
-V1: http://localhost:8080/person?version=1
-
-@GetMapping(path = "/person", params = "version=1")
-
-V2: http://localhost:8080/person?version=2
-
-@GetMapping(path = "/person", params = "version=2")
-
-Header Versioning
-
-V1: http://localhost:8080/person/header
-
-HEADER - X-API-VERSION:1
-
-@GetMapping(path = "/person/header", headers = "X-API-VERSION=1")
-
-V2: http://localhost:8080/person/header
-
-HEADER - X-API-VERSION:2
-
-@GetMapping(path = "/person/header", headers = "X-API-VERSION=2")
-
-Content Negotiation Versioning
-
-V1: http://localhost:8080/person/accept
-
-HEADER - Accept:application/vnd.company.app-v1+json
-
-@GetMapping(path = "/person/accept", produces = "application/vnd.company.app-v1+json")
-
-V2: http://localhost:8080/person/accept
-
-HEADER - Accept:application/vnd.company.app-v1+json
-
-@GetMapping(path = "/person/accept", produces = "application/vnd.company.app-v2+json")
-
-V1 Response
-
-{
-  "name": "Bob Charlie"
-}
-V2 Response
-
-{
-  "name": {
-    "firstName": "Bob",
-    "lastName": "Charlie"
-  }
-}
+/src/main/resources/application.properties Modified
+#spring.datasource.url=jdbc:h2:mem:testdb
+spring.jpa.show-sql=true
+spring.datasource.url=jdbc:mysql://localhost:3306/social-media-database
+spring.datasource.username=social-media-user
+spring.datasource.password=dummypassword
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
